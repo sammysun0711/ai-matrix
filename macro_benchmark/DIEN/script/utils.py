@@ -225,6 +225,35 @@ def prelu(_x, scope=''):
                                  dtype=_x.dtype, initializer=tf.constant_initializer(0.1))
         return tf.maximum(tf.cast(0.0, _x.dtype), _x) + _alpha * tf.minimum(tf.cast(0.0, _x.dtype), _x)
 
+def calc_acc(raw_arr):
+    """Summary
+
+    Args:
+        raw_arr (TYPE): Description
+
+    Returns:
+        TYPE: Description
+    """
+
+    arr = sorted(raw_arr, key=lambda d:d[0], reverse=True)
+    fp, tp = 0., 0.
+    fn, tn = 0., 0.
+
+    for record in arr:
+        if record[1] == 1.:
+            if record[0] > 0.5:
+                tp += 1
+            else:
+                fn += 1
+        else:
+            if record[0] > 0.5:
+                fp += 1
+            else:
+                tn += 1
+    acc = (tp + tn) / len(arr)
+
+    return acc
+
 def calc_auc(raw_arr):
     """Summary
 

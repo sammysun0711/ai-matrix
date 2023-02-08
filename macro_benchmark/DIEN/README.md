@@ -68,3 +68,22 @@ python script/train.py --mode=synthetic --batch_size=32 --model=DIEN --embedding
 # embedding on CPU
 python script/train.py --mode=synthetic --batch_size=32 --model=DIEN --embedding_device=cpu
 ```
+
+## Convert TF Model to OpenVINO IR
+```
+mo --input_meta dnn_best_model_trained/ckpt_noshuffDIEN3.meta --input "Inputs/mid_his_batch_ph[-1 -1],Inputs/cat_his_batch_ph[-1 -1],Inputs/uid_batch_ph[-1],Inputs/mid_batch_ph[-1],Inputs/cat_batch_ph[-1],Inputs/mask[-1 -1],Inputs/seq_len_ph[-1]" --output dien/fcn/Softmax --model_name DIEN -o openvino/FP32
+```
+
+## TF model FP32 accuracy verification with batch size 128
+```
+python script/train.py --mode test --batch_size 128 --model=DIEN --embedding_device=cpu
+```
+
+## OpenVINO FP32 accuracy verification with batch size 128
+```
+python script/ov_infer.py --batch_size 128 --data_type FP32
+```
+## OpenVINO BF16 accuracy verification with batch size 128
+```
+python script/ov_infer.py --batch_size 128 --data_type BF16
+```
